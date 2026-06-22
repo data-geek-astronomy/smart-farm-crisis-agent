@@ -8,11 +8,12 @@ from datetime import datetime
 ENV_OPENAI_KEY = os.environ.get("OPENAI_API_KEY", "")
 ENV_OWM_KEY = os.environ.get("OPENWEATHER_API_KEY", "")
 
+# bg (rgba), text color, border color, emoji
 SEVERITY_STYLES = {
-    "low":      ("#dcfce7", "#166534", "#22c55e", "🟢"),
-    "medium":   ("#fef9c3", "#854d0e", "#eab308", "🟡"),
-    "high":     ("#ffedd5", "#9a3412", "#f97316", "🟠"),
-    "critical": ("#fee2e2", "#991b1b", "#ef4444", "🔴"),
+    "low":      ("rgba(34,197,94,0.15)",   "#86efac", "#22c55e", "🟢"),
+    "medium":   ("rgba(234,179,8,0.15)",   "#fde047", "#eab308", "🟡"),
+    "high":     ("rgba(249,115,22,0.15)",  "#fdba74", "#f97316", "🟠"),
+    "critical": ("rgba(239,68,68,0.18)",   "#fca5a5", "#ef4444", "🔴"),
 }
 
 # ── Pre-computed demo scenarios (no API key required) ───────────────────────
@@ -128,8 +129,9 @@ def render_result(result: dict, weather: dict, city: str, weather_note: str = ""
     header_icon = "🚨 CRISIS DETECTED —" if is_crisis else "✅"
 
     note_html = (
-        f"<div style='background:#fefce8;border:1px solid #fde68a;border-radius:6px;"
-        f"padding:8px 12px;font-size:0.82rem;margin-bottom:10px;'>⚠️ {weather_note}</div>"
+        f"<div style='background:rgba(234,179,8,0.15);border:1px solid rgba(234,179,8,0.4);"
+        f"border-radius:6px;padding:8px 12px;font-size:0.82rem;margin-bottom:10px;color:#fde047;'>"
+        f"⚠️ {weather_note}</div>"
         if weather_note else ""
     )
 
@@ -139,35 +141,35 @@ def render_result(result: dict, weather: dict, city: str, weather_note: str = ""
   <div style="font-size:1.25rem;font-weight:700;color:{txt};">
     {header_icon} {crisis_label} &nbsp; {emoji}
   </div>
-  <div style="font-size:0.88rem;color:{txt};margin-top:4px;">
+  <div style="font-size:0.88rem;color:{txt};margin-top:4px;opacity:0.9;">
     Severity: <strong>{sev.upper()}</strong> &nbsp;|&nbsp; Location: <strong>{city}</strong>
   </div>
 </div>
 
-<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;margin-bottom:10px;font-size:0.88rem;">
-  <strong>📡 Sensor Readings</strong><br style="margin-bottom:4px;">
-  🌡️ Air: <strong>{weather['temperature_c']}°C</strong> &nbsp;|&nbsp;
-  💧 Humidity: <strong>{weather['humidity_pct']}%</strong> &nbsp;|&nbsp;
-  ☁️ {weather['weather_condition']} &nbsp;|&nbsp;
-  🌬️ Wind: <strong>{weather['wind_speed_ms']} m/s</strong>
+<div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:12px;margin-bottom:10px;font-size:0.88rem;color:#e2e8f0;">
+  <span style="font-weight:600;color:#94a3b8;">📡 Sensor Readings</span><br style="margin-bottom:4px;">
+  🌡️ Air: <strong style="color:#f1f5f9;">{weather['temperature_c']}°C</strong> &nbsp;|&nbsp;
+  💧 Humidity: <strong style="color:#f1f5f9;">{weather['humidity_pct']}%</strong> &nbsp;|&nbsp;
+  ☁️ <span style="color:#f1f5f9;">{weather['weather_condition']}</span> &nbsp;|&nbsp;
+  🌬️ Wind: <strong style="color:#f1f5f9;">{weather['wind_speed_ms']} m/s</strong>
 </div>
 
-<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px;margin-bottom:10px;">
-  <strong>⚡ Recommended Action</strong><br>
-  <span style="font-size:0.9rem;">{result.get('recommended_action', '')}</span>
+<div style="background:rgba(59,130,246,0.15);border:1px solid rgba(96,165,250,0.4);border-radius:8px;padding:12px;margin-bottom:10px;color:#bfdbfe;">
+  <strong style="color:#93c5fd;">⚡ Recommended Action</strong><br>
+  <span style="font-size:0.9rem;color:#e0f2fe;">{result.get('recommended_action', '')}</span>
 </div>
 
-<div style="background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:12px;margin-bottom:10px;">
-  <strong>📱 WhatsApp Alert → Farmer</strong><br>
-  <code style="font-size:0.85rem;color:#1e293b;">{result.get('farmer_message', '')}</code>
+<div style="background:rgba(234,179,8,0.12);border:1px solid rgba(234,179,8,0.4);border-radius:8px;padding:12px;margin-bottom:10px;">
+  <strong style="color:#fde047;">📱 WhatsApp Alert → Farmer</strong><br>
+  <code style="font-size:0.85rem;color:#fef9c3;">{result.get('farmer_message', '')}</code>
 </div>
 
-<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px;margin-bottom:10px;">
-  <strong>📧 Email → Crop Buyers</strong><br>
-  <pre style="font-size:0.82rem;white-space:pre-wrap;margin:6px 0 0;color:#1e293b;font-family:inherit;">{result.get('buyer_message', '')}</pre>
+<div style="background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.35);border-radius:8px;padding:12px;margin-bottom:10px;">
+  <strong style="color:#86efac;">📧 Email → Crop Buyers</strong><br>
+  <pre style="font-size:0.82rem;white-space:pre-wrap;margin:6px 0 0;color:#d1fae5;font-family:inherit;">{result.get('buyer_message', '')}</pre>
 </div>
 
-<div style="background:#fafafa;border:1px solid #e5e7eb;border-radius:8px;padding:10px;font-size:0.82rem;color:#6b7280;">
+<div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px;font-size:0.82rem;color:#94a3b8;">
   🔍 <em>{result.get('key_concern', '')}</em>
 </div>
 """
@@ -176,12 +178,12 @@ def render_result(result: dict, weather: dict, city: str, weather_note: str = ""
 def render_demo(scenario_idx: int) -> str:
     s = DEMO_SCENARIOS[scenario_idx]
     soil_html = (
-        f"<div style='background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;"
-        f"padding:10px 12px;margin-bottom:10px;font-size:0.88rem;'>"
-        f"<strong>🪱 Soil Sensors</strong> &nbsp;|&nbsp; "
-        f"💧 Moisture: <strong>{s['soil']['moisture']}%</strong> &nbsp;|&nbsp; "
-        f"🌡️ Soil Temp: <strong>{s['soil']['temp']}°C</strong> &nbsp;|&nbsp; "
-        f"⚗️ pH: <strong>{s['soil']['ph']}</strong>"
+        f"<div style='background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);"
+        f"border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:0.88rem;color:#e2e8f0;'>"
+        f"<span style='color:#94a3b8;font-weight:600;'>🪱 Soil Sensors</span> &nbsp;|&nbsp; "
+        f"💧 Moisture: <strong style='color:#f1f5f9;'>{s['soil']['moisture']}%</strong> &nbsp;|&nbsp; "
+        f"🌡️ Soil Temp: <strong style='color:#f1f5f9;'>{s['soil']['temp']}°C</strong> &nbsp;|&nbsp; "
+        f"⚗️ pH: <strong style='color:#f1f5f9;'>{s['soil']['ph']}</strong>"
         f"</div>"
     )
     return soil_html + render_result(s["result"], s["weather"], s["city"])
@@ -216,10 +218,10 @@ def analyze_farm(city, soil_moisture, soil_temp, soil_ph, openai_key_input, owm_
 
     if not oai_key:
         return (
-            "<div style='background:#fee2e2;border:2px solid #ef4444;border-radius:10px;"
-            "padding:16px;color:#991b1b;'>"
+            "<div style='background:rgba(239,68,68,0.15);border:2px solid #ef4444;border-radius:10px;"
+            "padding:16px;color:#fca5a5;'>"
             "<strong>❌ OpenAI API key required</strong><br>"
-            "<small>Enter it in the field above, or add <code>OPENAI_API_KEY</code> "
+            "<small style='color:#fecaca;'>Enter it in the field above, or add <code>OPENAI_API_KEY</code> "
             "as a Secret in HF Space Settings → Variables and Secrets.</small></div>"
         )
 
@@ -316,9 +318,10 @@ with gr.Blocks(
         # ── Tab 1: Live Demo (no API key needed) ───────────────────────────
         with gr.Tab("🎮 Live Demo"):
             gr.HTML("""
-            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;
-                        padding:12px 16px;margin-bottom:12px;font-size:0.9rem;color:#166534;">
-              <strong>👇 No API key needed</strong> — click any scenario to see the full AI output
+            <div style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.4);
+                        border-radius:8px;padding:12px 16px;margin-bottom:12px;
+                        font-size:0.9rem;color:#86efac;">
+              <strong>👇 No API key needed</strong> — click any scenario below to see the full AI output
             </div>
             """)
 
@@ -363,10 +366,11 @@ with gr.Blocks(
                         ph_in       = gr.Slider(label="Soil pH",               minimum=3.0, maximum=10,  value=6.5, step=0.1)
 
                     gr.HTML("""
-                    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;
-                                padding:8px 12px;font-size:0.82rem;color:#1e40af;margin-bottom:8px;">
+                    <div style="background:rgba(59,130,246,0.15);border:1px solid rgba(96,165,250,0.4);
+                                border-radius:6px;padding:8px 12px;font-size:0.82rem;
+                                color:#bfdbfe;margin-bottom:8px;">
                       💡 Default values simulate a <strong>drought scenario</strong>
-                      (moisture 15%, humid 18%) — hit Analyze to see the AI in action.
+                      (moisture 15%) — hit Analyze to see the AI in action.
                     </div>
                     """)
 
