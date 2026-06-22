@@ -9,6 +9,7 @@ app_file: app.py
 pinned: false
 license: mit
 short_description: AI farm crisis detection for drought frost flooding
+python_version: "3.10"
 ---
 
 # 🌾 Smart Farm Crisis Response Agent
