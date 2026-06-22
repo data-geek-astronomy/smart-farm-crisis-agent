@@ -2,13 +2,13 @@
 title: Smart Farm Crisis Response Agent
 emoji: 🌾
 colorFrom: green
-colorTo: teal
+colorTo: green
 sdk: gradio
 sdk_version: 4.44.0
 app_file: app.py
 pinned: false
 license: mit
-short_description: AI-powered farm crisis detection — drought, frost, flooding & heat
+short_description: AI farm crisis detection for drought frost flooding
 ---
 
 # 🌾 Smart Farm Crisis Response Agent
